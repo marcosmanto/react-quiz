@@ -22,7 +22,8 @@ const Actions = Object.freeze({
 
 const initialState = {
   questions: [],
-  status: Status.LOADING
+  status: Status.LOADING,
+  index: 0
 }
 
 function reducer(state, action) {
@@ -46,7 +47,7 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState)
 
   const numQuestions = questions.length
 
@@ -63,7 +64,7 @@ export default function App() {
         {status === Status.LOADING && <Loader />}
         {status === Status.ERROR && <Error />}
         {status === Status.READY && <StartScreen numQuestions={numQuestions} dispatch={dispatch} actions={Actions} />}
-        {status === Status.ACTIVE && <Question />}
+        {status === Status.ACTIVE && <Question question={questions.at(index)} />}
       </Main>
     </div>
   )
