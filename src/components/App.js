@@ -17,13 +17,16 @@ const Status = Object.freeze({
 const Actions = Object.freeze({
   DATA_RECEIVED: Symbol('datareceived'),
   DATA_FAILED: Symbol('datafailed'),
-  START: Symbol('start')
+  START: Symbol('start'),
+  NEW_ANSWER: Symbol('newanswer')
 })
 
 const initialState = {
   questions: [],
   status: Status.LOADING,
-  index: 0
+  index: 0,
+  answer: null,
+  points: 0
 }
 
 function reducer(state, action) {
@@ -41,13 +44,16 @@ function reducer(state, action) {
       }
     case Actions.START:
       return { ...state, status: Status.ACTIVE }
+    case Actions.NEW_ANSWER:
+      const question = state.questions.at(state.index)
+      return { ...state, answer: action.payload, points: action.payload === question.correctOption ? state.points + question.points : state.points }
     default:
       throw new Error('Action unknown')
   }
 }
 
 export default function App() {
-  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status, index, answer }, dispatch] = useReducer(reducer, initialState)
 
   const numQuestions = questions.length
 
@@ -64,7 +70,7 @@ export default function App() {
         {status === Status.LOADING && <Loader />}
         {status === Status.ERROR && <Error />}
         {status === Status.READY && <StartScreen numQuestions={numQuestions} dispatch={dispatch} actions={Actions} />}
-        {status === Status.ACTIVE && <Question question={questions.at(index)} />}
+        {status === Status.ACTIVE && <Question question={questions.at(index)} dispatch={dispatch} answer={answer} actions={Actions} />}
       </Main>
     </div>
   )
