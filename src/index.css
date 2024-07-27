@@ -173,6 +173,11 @@ progress {
 }
 
 .result {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   background-color: var(--color-theme);
   color: var(--color-light);
   border-radius: 100px;
@@ -183,7 +188,7 @@ progress {
   margin-bottom: 1.6rem;
 }
 
-.result span {
+.result span:not(.score-message) {
   font-size: 2.2rem;
   margin-right: 4px;
 }
@@ -297,6 +302,11 @@ progress {
     border-radius: 100px;
     transition: 0.3s;
   }
+
+  .result,
+  .highscore {
+    font-size: 1.6rem;
+  }
 }
 
 @media (max-width: 35em) {
@@ -312,6 +322,17 @@ progress {
   .main {
     text-align: center;
     width: 100%;
+  }
+
+  .result {
+    font-size: 1.4rem;
+    padding: 1rem 0;
+    width: 80%;
+    margin-inline: auto;
+  }
+
+  .highscore {
+    font-size: 1.4rem;
   }
 }
 
@@ -332,5 +353,25 @@ progress {
     cursor: pointer;
     border-radius: 100px;
     transition: 0.3s;
+  }
+}
+
+@media (max-width: 25em) {
+  .result {
+    font-size: 1.2rem;
+    padding: 0.8rem 0;
+    width: 100%;
+  }
+
+  .highscore {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 18.5em) {
+  .result {
+    grid-template-columns: auto;
+    padding: 2rem 1rem;
+    border-radius: 25px;
   }
 }
