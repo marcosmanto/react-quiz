@@ -6,6 +6,7 @@ import Question from './Question'
 import NextButton from './NextButton'
 import { useEffect, useReducer } from 'react'
 import StartScreen from './StartScreen'
+import Progress from './Progress'
 
 const Status = Object.freeze({
   LOADING: Symbol('loading'),
@@ -61,9 +62,10 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, status, index, answer }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(reducer, initialState)
 
   const numQuestions = questions.length
+  const maxPoints = questions.reduce((accumulator, currentQuestion) => accumulator + currentQuestion.points, 0)
 
   useEffect(function () {
     fetch('http://localhost:8000/questions')
@@ -80,6 +82,7 @@ export default function App() {
         {status === Status.READY && <StartScreen numQuestions={numQuestions} dispatch={dispatch} actions={Actions} />}
         {status === Status.ACTIVE && (
           <>
+            <Progress index={index} numQuestions={numQuestions} points={points} maxPoints={maxPoints} answer={answer} />
             <Question question={questions.at(index)} dispatch={dispatch} answer={answer} actions={Actions} />
             <NextButton dispatch={dispatch} answer={answer} actions={Actions} />
           </>
