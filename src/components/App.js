@@ -23,7 +23,8 @@ const Actions = Object.freeze({
   START: Symbol('start'),
   NEW_ANSWER: Symbol('newanswer'),
   NEXT_QUESTION: Symbol('nextquestion'),
-  FINISH: Symbol('finish')
+  FINISH: Symbol('finish'),
+  RESTART: Symbol('restart')
 })
 
 const initialState = {
@@ -61,6 +62,8 @@ function reducer(state, action) {
       }
     case Actions.FINISH:
       return { ...state, status: Status.FINISHED, highscore: state.points > state.highscore ? state.points : state.highscore }
+    case Actions.RESTART:
+      return { ...initialState, questions: state.questions, highscore: state.highscore, status: Status.READY }
     case Actions.default:
       throw new Error('Action unknown')
   }
@@ -92,7 +95,7 @@ export default function App() {
             <NextButton index={index} numQuestions={numQuestions} dispatch={dispatch} answer={answer} actions={Actions} />
           </>
         )}
-        {status === Status.FINISHED && <FinishedScreen points={points} maxPoints={maxPoints} highscore={highscore} />}
+        {status === Status.FINISHED && <FinishedScreen points={points} maxPoints={maxPoints} highscore={highscore} dispatch={dispatch} actions={Actions} />}
       </Main>
     </div>
   )
