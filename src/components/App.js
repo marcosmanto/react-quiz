@@ -7,7 +7,9 @@ import NextButton from './NextButton'
 import { useEffect, useReducer } from 'react'
 import StartScreen from './StartScreen'
 import Progress from './Progress'
+import Footer from './Footer'
 import FinishedScreen from './FinishedScreen'
+import Timer from './Timer'
 
 const Status = Object.freeze({
   LOADING: Symbol('loading'),
@@ -27,13 +29,16 @@ const Actions = Object.freeze({
   RESTART: Symbol('restart')
 })
 
+const SECS_PER_QUESTION = 30
+
 const initialState = {
   questions: [],
   status: Status.LOADING,
   index: 0,
   answer: null,
   points: 0,
-  highscore: 0
+  highscore: 0,
+  secondsRemaining: null
 }
 
 function reducer(state, action) {
@@ -50,7 +55,7 @@ function reducer(state, action) {
         status: Status.ERROR
       }
     case Actions.START:
-      return { ...state, status: Status.ACTIVE }
+      return { ...state, status: Status.ACTIVE, secondsRemaining: state.questions.length * SECS_PER_QUESTION }
     case Actions.NEW_ANSWER:
       const question = state.questions.at(state.index)
       return { ...state, answer: action.payload, points: action.payload === question.correctOption ? state.points + question.points : state.points }
@@ -64,13 +69,15 @@ function reducer(state, action) {
       return { ...state, status: Status.FINISHED, highscore: state.points > state.highscore ? state.points : state.highscore }
     case Actions.RESTART:
       return { ...initialState, questions: state.questions, highscore: state.highscore, status: Status.READY }
+    case 'tick':
+      return { ...state, secondsRemaining: state.secondsRemaining - 1, status: state.secondsRemaining === 0 ? Status.FINISHED : state.status }
     case Actions.default:
       throw new Error('Action unknown')
   }
 }
 
 export default function App() {
-  const [{ questions, status, index, answer, points, highscore }, dispatch] = useReducer(reducer, initialState)
+  const [{ questions, status, index, answer, points, highscore, secondsRemaining }, dispatch] = useReducer(reducer, initialState)
 
   const numQuestions = questions.length
   const maxPoints = questions.reduce((accumulator, currentQuestion) => accumulator + currentQuestion.points, 0)
@@ -92,7 +99,10 @@ export default function App() {
           <>
             <Progress index={index} numQuestions={numQuestions} points={points} maxPoints={maxPoints} answer={answer} />
             <Question question={questions.at(index)} dispatch={dispatch} answer={answer} actions={Actions} />
-            <NextButton index={index} numQuestions={numQuestions} dispatch={dispatch} answer={answer} actions={Actions} />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton index={index} numQuestions={numQuestions} dispatch={dispatch} answer={answer} actions={Actions} />
+            </Footer>
           </>
         )}
         {status === Status.FINISHED && <FinishedScreen points={points} maxPoints={maxPoints} highscore={highscore} dispatch={dispatch} actions={Actions} />}

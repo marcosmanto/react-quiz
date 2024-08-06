@@ -293,10 +293,10 @@ progress {
     text-align: center;
   }
 
-  .btn {
+  .btn,
+  .timer {
     font-size: 1.6rem;
     border: 2px solid var(--color-dark);
-    background-color: var(--color-dark);
     padding: 0.9rem 1.8rem;
     cursor: pointer;
     border-radius: 100px;
@@ -345,10 +345,10 @@ progress {
     font-size: 1.4rem;
   }
 
-  .btn {
+  .btn,
+  .timer {
     font-size: 1.2rem;
     border: 2px solid var(--color-dark);
-    background-color: var(--color-dark);
     padding: 0.7rem 1.6rem;
     cursor: pointer;
     border-radius: 100px;
