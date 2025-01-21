@@ -1,4 +1,6 @@
-function StartScreen({ numQuestions, dispatch, actions: Actions }) {
+import { Actions } from './constants'
+
+function StartScreen({ numQuestions, dispatch }) {
   return (
     <div className="start">
       <h2>Welcome to The React Quiz!</h2>

@@ -1,4 +1,6 @@
-function Options({ question, dispatch, answer, actions: Actions }) {
+import { Actions } from './constants'
+
+function Options({ question, dispatch, answer }) {
   const hasAnswered = answer !== null
 
   return (

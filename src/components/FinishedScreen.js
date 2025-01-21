@@ -1,4 +1,6 @@
-function FinishedScreen({ points, maxPoints, highscore, dispatch, actions: Actions }) {
+import { Actions } from './constants'
+
+function FinishedScreen({ points, maxPoints, highscore, dispatch }) {
   const percentage = (points / maxPoints) * 100
 
   let emoji

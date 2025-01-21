@@ -10,26 +10,7 @@ import Progress from './Progress'
 import Footer from './Footer'
 import FinishedScreen from './FinishedScreen'
 import Timer from './Timer'
-
-const Status = Object.freeze({
-  LOADING: Symbol('loading'),
-  ERROR: Symbol('error'),
-  READY: Symbol('ready'),
-  ACTIVE: Symbol('active'),
-  FINISHED: Symbol('finished')
-})
-
-const Actions = Object.freeze({
-  DATA_RECEIVED: Symbol('datareceived'),
-  DATA_FAILED: Symbol('datafailed'),
-  START: Symbol('start'),
-  NEW_ANSWER: Symbol('newanswer'),
-  NEXT_QUESTION: Symbol('nextquestion'),
-  FINISH: Symbol('finish'),
-  RESTART: Symbol('restart')
-})
-
-const SECS_PER_QUESTION = 30
+import { Status, Actions, SECS_PER_QUESTION } from './constants'
 
 const initialState = {
   questions: [],
@@ -71,7 +52,7 @@ function reducer(state, action) {
       return { ...initialState, questions: state.questions, highscore: state.highscore, status: Status.READY }
     case 'tick':
       return { ...state, secondsRemaining: state.secondsRemaining - 1, status: state.secondsRemaining === 0 ? Status.FINISHED : state.status }
-    case Actions.default:
+    default:
       throw new Error('Action unknown')
   }
 }
@@ -94,18 +75,18 @@ export default function App() {
       <Main>
         {status === Status.LOADING && <Loader />}
         {status === Status.ERROR && <Error />}
-        {status === Status.READY && <StartScreen numQuestions={numQuestions} dispatch={dispatch} actions={Actions} />}
+        {status === Status.READY && <StartScreen numQuestions={numQuestions} dispatch={dispatch} />}
         {status === Status.ACTIVE && (
           <>
             <Progress index={index} numQuestions={numQuestions} points={points} maxPoints={maxPoints} answer={answer} />
-            <Question question={questions.at(index)} dispatch={dispatch} answer={answer} actions={Actions} />
+            <Question question={questions.at(index)} dispatch={dispatch} answer={answer} />
             <Footer>
               <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
-              <NextButton index={index} numQuestions={numQuestions} dispatch={dispatch} answer={answer} actions={Actions} />
+              <NextButton index={index} numQuestions={numQuestions} dispatch={dispatch} answer={answer} />
             </Footer>
           </>
         )}
-        {status === Status.FINISHED && <FinishedScreen points={points} maxPoints={maxPoints} highscore={highscore} dispatch={dispatch} actions={Actions} />}
+        {status === Status.FINISHED && <FinishedScreen points={points} maxPoints={maxPoints} highscore={highscore} dispatch={dispatch} />}
       </Main>
     </div>
   )
