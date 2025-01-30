@@ -1,9 +1,6 @@
-import { useQuiz } from '../providers/QuizProvider'
 import { Actions } from './constants'
 
-function FinishedScreen() {
-  const { points, maxPoints, highscore, dispatch } = useQuiz()
-
+function FinishedScreen({ points, maxPoints, highscore, dispatch }) {
   const percentage = (points / maxPoints) * 100
 
   let emoji

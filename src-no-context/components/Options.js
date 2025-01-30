@@ -1,8 +1,6 @@
-import { useQuiz } from '../providers/QuizProvider'
 import { Actions } from './constants'
 
-function Options({ question }) {
-  const { answer, dispatch } = useQuiz()
+function Options({ question, dispatch, answer }) {
   const hasAnswered = answer !== null
 
   return (
